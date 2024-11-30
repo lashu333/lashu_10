@@ -14,7 +14,7 @@
 		8C8B99DE2CFBBF290022E97D /* Exceptions for "lashu_10" folder in "lashu_10" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				SupportingFiles/Info.plist,
 			);
 			target = 8C8B99CB2CFBBF280022E97D /* lashu_10 */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CHC8JDRJ4U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = lashu_10/Info.plist;
+				INFOPLIST_FILE = lashu_10/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -175,7 +175,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CHC8JDRJ4U;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = lashu_10/Info.plist;
+				INFOPLIST_FILE = lashu_10/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
