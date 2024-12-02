@@ -26,10 +26,14 @@ class SignInViewController: UIViewController {
     @IBAction func didTapLogIn(_ sender: UIButton) {
         if !isEmailValid(){
             Constants.shared.showAlert(vc: self, alert: alert,title: "enter valid email", message: "This is not an email")
+            return
         }
-        doesUserExist() ? print("user exists") : print("user doesn't exist")
         if Constants.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
             Constants.shared.showAlert(vc: self, alert: alert, title: "empty fields", message: "fill the empty fields to log in")
+            return
+        }
+        if canLogIn() {
+            
         }
     }
     @IBAction func didEndEditingEmail(_ sender: UITextField) {
@@ -55,8 +59,26 @@ class SignInViewController: UIViewController {
     func isEmailValid() -> Bool {
         Constants.shared.isValidEmail(emailTextField?.text ?? "")
     }
-    func doesUserExist() -> Bool {
-        UserDataSource.shared.users.contains(where: { $0.email == emailTextField?.text ?? "" })
+    func doesUserExist() -> (Bool, User?) {
+        guard let email = emailTextField?.text else {
+                return (false, nil)
+            }
+            if let user = UserDataSource.shared.users.first(where: { $0.email == email }) {
+                return (true, user)
+            }
+            return (false, nil)
+    }
+    func canLogIn() -> Bool{
+        let (isValid, user) = doesUserExist()
+        if isValid {
+            guard let password = passwordTextField?.text else {
+                return false
+            }
+            if user?.password == password {
+               return true
+            }
+        }
+        return false
     }
     //MARK: objc funcs
     @objc func doneButtonTapped(){
