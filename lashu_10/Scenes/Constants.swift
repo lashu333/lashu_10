@@ -28,11 +28,14 @@ class Constants{
         tb.items = tbi
         tf.forEach { $0?.inputAccessoryView = tb }
     }
-    func showAlert(alert:UIAlertController,title: String, message: String){
+    func showAlert(vc: UIViewController,alert:UIAlertController,title: String, message: String){
         if !alert.hasActions{
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         }
         alert.title = title
         alert.message = message
+        if vc.presentedViewController != alert {
+            vc.present(alert, animated: true, completion: nil)
+        }
     }
 }

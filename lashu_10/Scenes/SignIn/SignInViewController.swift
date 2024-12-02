@@ -19,18 +19,17 @@ class SignInViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpAlert()
         // Do any additional setup after loading the view.
         Constants.shared.setUpToolBar([nextButton,doneButton], [emailTextField, passwordTextField], toolBar, self)
     }
     //MARK: Actions
     @IBAction func didTapLogIn(_ sender: UIButton) {
         if !isEmailValid(){
-            Constants.shared.showAlert(alert: alert,title: "enter valid email", message: "This is not an email")
+            Constants.shared.showAlert(vc: self, alert: alert,title: "enter valid email", message: "This is not an email")
         }
         doesUserExist() ? print("user exists") : print("user doesn't exist")
         if Constants.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
-            Constants.shared.showAlert(alert: alert, title: "empty fields", message: "fill the empty fields to log in")
+            Constants.shared.showAlert(vc: self, alert: alert, title: "empty fields", message: "fill the empty fields to log in")
         }
     }
     @IBAction func didEndEditingEmail(_ sender: UITextField) {
@@ -55,14 +54,6 @@ class SignInViewController: UIViewController {
     //MARK: Methods
     func isEmailValid() -> Bool {
         Constants.shared.isValidEmail(emailTextField?.text ?? "")
-    }
-    func showAlert(title: String, message: String) {
-        alert.title = title
-        alert.message = message
-        present(alert, animated: true, completion: nil)
-    }
-    func setUpAlert() {
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     }
     func doesUserExist() -> Bool {
         UserDataSource.shared.users.contains(where: { $0.email == emailTextField?.text ?? "" })

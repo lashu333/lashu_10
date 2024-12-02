@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController {
               let workPlace = workPlaceTextField?.text, !workPlace.isEmpty,
               let password = passwordTextField?.text else {
             
-            Constants.shared.showAlert(alert: alert, title: "empty fields!", message: "Please fill all fields correctly")
+            Constants.shared.showAlert(vc: self, alert: alert, title: "empty fields!", message: "Please fill all fields correctly")
             return
         }
         let newUser = User(
@@ -71,7 +71,7 @@ class SignUpViewController: UIViewController {
         )
         for u in UserDataSource.shared.users {
             if u.email == newUser.email {
-                Constants.shared.showAlert(alert: alert,title:"user is already registered ", message: "you can log in")
+                Constants.shared.showAlert(vc: self, alert: alert,title:"user is already registered ", message: "you can log in")
                 couldFoundUserInSource = true
                 break
             }
