@@ -21,12 +21,14 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     //MARK: Properties
     //let user: User?
+    let toolBar = UIToolbar()
     let alert = UIAlertController()
     
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        setUpToolBar()
         setUpDummyFields()
         setUpAlert()
     }
@@ -80,6 +82,19 @@ class SignUpViewController: UIViewController {
         }
     }
     //MARK: Private methods
+    func setUpToolBar(){
+        toolBar.sizeToFit()
+        let nextButton = UIBarButtonItem(title: "next", style: .plain, target: self, action: #selector(nextButtonTapped))
+        let doneButton = UIBarButtonItem(title: "done", style: .plain, target: self, action: #selector(doneButtonTapped))
+        toolBar.items = [nextButton, doneButton]
+        let textFields = [
+            firstNameTextField, lastNameTextField, personalNumberTextField,
+            ageTextField, phoneNumberTextField, emailTextField,
+            addressTextField, maritalStatusTextField, workPlaceTextField,
+            passwordTextField
+        ]
+        textFields.forEach({$0?.inputAccessoryView = toolBar})
+    }
     private func setUpAlert(){
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     }
@@ -115,7 +130,29 @@ class SignUpViewController: UIViewController {
         let vc = sb.instantiateViewController(withIdentifier: "SignInViewController")
         navigationController?.pushViewController(vc, animated: true)
     }
+    //MARK: objc functions for my toolbar
+    @objc func doneButtonTapped(){
+        view.endEditing(true)
+    }
+    @objc func nextButtonTapped() {
+        let textFields = [
+            firstNameTextField, lastNameTextField, personalNumberTextField,
+            ageTextField, phoneNumberTextField, emailTextField,
+            addressTextField, maritalStatusTextField, workPlaceTextField,
+            passwordTextField
+        ]
+        for (index, textField) in textFields.enumerated() {
+            if textField?.isFirstResponder == true, index < textFields.count - 1 {
+                textFields[index + 1]?.becomeFirstResponder()
+                break
+            }
+            if textFields.count - 1 == index {
+                textFields[0]?.becomeFirstResponder()
+            }
+        }
+    }
 }
 
 //TO DO : marital status fix, set up tool bar menu for text fields.
-//CHECK: es gavakete,,,,,,,,,
+//CHECK: es gavakete,,,,,,,,, esec kinda
+
