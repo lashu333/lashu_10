@@ -33,34 +33,34 @@ class SignUpViewController: UIViewController {
     //MARK: Actions
     @IBAction func didTapRegisterButton(_ sender: UIButton) {
         var couldFoundUserInSource: Bool = false
+        let maritalStatus = User.getMaritalStatus(maritalStatusTextField?.text ?? "")
         guard let firstName = firstNameTextField?.text, !firstName.isEmpty,
-                  let lastName = lastNameTextField?.text, !lastName.isEmpty,
-                  let personalNumber = personalNumberTextField?.text, !personalNumber.isEmpty,
-                  let ageText = ageTextField?.text, let age = Int(ageText), age > 0,
-                  let phoneNumber = phoneNumberTextField?.text, !phoneNumber.isEmpty,
-                  let email = emailTextField?.text, isValidEmail(email),
-                  let address = addressTextField?.text, !address.isEmpty,
-                  let maritalStatus = maritalStatusTextField?.text,
-                  let workPlace = workPlaceTextField?.text, !workPlace.isEmpty,
-                  let password = passwordTextField?.text else {
-                
+              let lastName = lastNameTextField?.text, !lastName.isEmpty,
+              let personalNumber = personalNumberTextField?.text, !personalNumber.isEmpty,
+              let ageText = ageTextField?.text, let age = Int(ageText), age > 0,
+              let phoneNumber = phoneNumberTextField?.text, !phoneNumber.isEmpty,
+              let email = emailTextField?.text, isValidEmail(email),
+              let address = addressTextField?.text, !address.isEmpty,
+              let workPlace = workPlaceTextField?.text, !workPlace.isEmpty,
+              let password = passwordTextField?.text else {
+            
             showAlert(title: "empty fields!", message: "Please fill all fields correctly")
-                return
-            }
+            return
+        }
         let newUser = User(
-                firstName: firstName,
-                lastName: lastName,
-                personalNumber: personalNumber,
-                age: age,
-                email: email,
-                address: address,
-                phoneNumber: phoneNumber,
-                maritalStatus: .single,
-                workPlace: workPlace,
-                password: password
-            )
+            firstName: firstName,
+            lastName: lastName,
+            personalNumber: personalNumber,
+            age: age,
+            email: email,
+            address: address,
+            phoneNumber: phoneNumber,
+            maritalStatus: maritalStatus,
+            workPlace: workPlace,
+            password: password
+        )
         for u in UserDataSource.shared.users {
-            if u == newUser {
+            if u.email == newUser.email {
                 showAlert(title:"user is already registered ", message: "you can log in")
                 couldFoundUserInSource = true
                 break
@@ -68,6 +68,16 @@ class SignUpViewController: UIViewController {
         }
         if couldFoundUserInSource { return }
         registerUser(newUser)
+        moveToSignInStoryBoard()
+    }
+    @IBAction func didEndEditingEmail(_ sender: UITextField) {
+        if !isValidEmail(sender.text!){
+            emailTextField.layer.borderWidth = 4
+            emailTextField.layer.borderColor = UIColor.red.cgColor
+        } else{
+            emailTextField.layer.borderWidth = 3
+            emailTextField.layer.borderColor = UIColor.green.cgColor
+        }
     }
     //MARK: Private methods
     private func setUpAlert(){
@@ -100,6 +110,12 @@ class SignUpViewController: UIViewController {
         workPlaceTextField.text = "Apple Inc."
         passwordTextField.text = "password"
     }
+    func moveToSignInStoryBoard(){
+        let sb = UIStoryboard(name: "SignIn", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "SignInViewController")
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 //TO DO : marital status fix, set up tool bar menu for text fields.
+//CHECK: es gavakete,,,,,,,,,

@@ -36,16 +36,24 @@ struct User{
         self.workPlace = workPlace
         self.password = password
     }
+    static func getMaritalStatus(_ string: String) -> MaritalStatus{
+        switch string{
+        case "single": return .single
+        case "married": return .married
+        case "divorced": return .divorced
+        default: return .single
+        }
+    }
     static func == (lhs: User, rhs: User) -> Bool {
         lhs.email == rhs.email && lhs.password == rhs.password
     }
-   static func userExists(_ user: User) -> Bool{
+    static func userExists(_ user: User) -> Bool{
         var userYes: Bool = false
         for userInSource in UserDataSource.shared.users{
             if user == userInSource {
                 userYes = true
             } else {
-               userYes = false
+                userYes = false
             }
         }
         return userYes
