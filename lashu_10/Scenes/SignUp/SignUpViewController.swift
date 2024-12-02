@@ -21,17 +21,26 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     //MARK: Properties
     //let user: User?
-    let toolBar = UIToolbar()
+    let toolBar = Constants.shared.toolBar
     let alert = UIAlertController()
+    let nextButton = UIBarButtonItem(title: "next", style: .plain, target: nil, action: #selector(nextButtonTapped))
+    let doneButton = UIBarButtonItem(title: "done", style: .plain, target: nil, action: #selector(doneButtonTapped))
     
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        setUpToolBar()
+        let textFields = [
+            firstNameTextField, lastNameTextField, personalNumberTextField,
+            ageTextField, phoneNumberTextField, emailTextField,
+            addressTextField, maritalStatusTextField, workPlaceTextField,
+            passwordTextField
+        ]
+        Constants.shared.setUpToolBar([nextButton, doneButton], textFields, toolBar, self)
         setUpDummyFields()
         setUpAlert()
     }
+    
     //MARK: Actions
     @IBAction func didTapRegisterButton(_ sender: UIButton) {
         var couldFoundUserInSource: Bool = false
@@ -46,7 +55,7 @@ class SignUpViewController: UIViewController {
               let workPlace = workPlaceTextField?.text, !workPlace.isEmpty,
               let password = passwordTextField?.text else {
             
-            showAlert(title: "empty fields!", message: "Please fill all fields correctly")
+            Constants.shared.showAlert(alert: alert, title: "empty fields!", message: "Please fill all fields correctly")
             return
         }
         let newUser = User(
@@ -63,7 +72,7 @@ class SignUpViewController: UIViewController {
         )
         for u in UserDataSource.shared.users {
             if u.email == newUser.email {
-                showAlert(title:"user is already registered ", message: "you can log in")
+                Constants.shared.showAlert(alert: alert,title:"user is already registered ", message: "you can log in")
                 couldFoundUserInSource = true
                 break
             }
@@ -82,19 +91,6 @@ class SignUpViewController: UIViewController {
         }
     }
     //MARK: Private methods
-    func setUpToolBar(){
-        toolBar.sizeToFit()
-        let nextButton = UIBarButtonItem(title: "next", style: .plain, target: self, action: #selector(nextButtonTapped))
-        let doneButton = UIBarButtonItem(title: "done", style: .plain, target: self, action: #selector(doneButtonTapped))
-        toolBar.items = [nextButton, doneButton]
-        let textFields = [
-            firstNameTextField, lastNameTextField, personalNumberTextField,
-            ageTextField, phoneNumberTextField, emailTextField,
-            addressTextField, maritalStatusTextField, workPlaceTextField,
-            passwordTextField
-        ]
-        textFields.forEach({$0?.inputAccessoryView = toolBar})
-    }
     private func setUpAlert(){
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     }
@@ -111,19 +107,6 @@ class SignUpViewController: UIViewController {
         alert.title = title
         alert.message = message
         present(alert, animated: true, completion: nil)
-    }
-    //MARK: Dummy fields
-    private func setUpDummyFields(){
-        firstNameTextField.text = "John"
-        lastNameTextField.text = "Doe"
-        personalNumberTextField.text = "123456789"
-        ageTextField.text = "20"
-        phoneNumberTextField.text = "123456789"
-        emailTextField.text = "john@doe.com"
-        addressTextField.text = "1234 Main Street"
-        maritalStatusTextField.text = "Single"
-        workPlaceTextField.text = "Apple Inc."
-        passwordTextField.text = "password"
     }
     func moveToSignInStoryBoard(){
         let sb = UIStoryboard(name: "SignIn", bundle: nil)
@@ -152,7 +135,21 @@ class SignUpViewController: UIViewController {
         }
     }
 }
-
+extension SignUpViewController {
+    //MARK: Dummy fields
+    private func setUpDummyFields(){
+        firstNameTextField.text = "John"
+        lastNameTextField.text = "Doe"
+        personalNumberTextField.text = "123456789"
+        ageTextField.text = "20"
+        phoneNumberTextField.text = "123456789"
+        emailTextField.text = "john@doe.com"
+        addressTextField.text = "1234 Main Street"
+        maritalStatusTextField.text = "Single"
+        workPlaceTextField.text = "Apple Inc."
+        passwordTextField.text = "password"
+    }
+}
 //TO DO : marital status fix, set up tool bar menu for text fields.
 //CHECK: es gavakete,,,,,,,,, esec kinda
 

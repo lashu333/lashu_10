@@ -22,11 +22,11 @@ class SignInViewController: UIViewController {
     //MARK: Actions
     @IBAction func didTapLogIn(_ sender: UIButton) {
         if !isEmailValid(){
-            showAlert(title: "enter valid email", message: "This is not an email")
+            Constants.shared.showAlert(alert: alert,title: "enter valid email", message: "This is not an email")
         }
         doesUserExist() ? print("user exists") : print("user doesn't exist")
-        if Constants.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
-            showAlert(title: "empty fields", message: "fill the empty fields to log in")
+        if Constants.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
+            Constants.shared.showAlert(alert: alert, title: "empty fields", message: "fill the empty fields to log in")
         }
     }
     @IBAction func didEndEditingEmail(_ sender: UITextField) {
@@ -50,7 +50,7 @@ class SignInViewController: UIViewController {
      */
     //MARK: Methods
     func isEmailValid() -> Bool {
-        Constants.isValidEmail(emailTextField?.text ?? "")
+        Constants.shared.isValidEmail(emailTextField?.text ?? "")
     }
     func showAlert(title: String, message: String) {
         alert.title = title

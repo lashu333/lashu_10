@@ -6,13 +6,15 @@
 //
 
 import UIKit
-struct Constants{
-    static func isValidEmail(_ email: String) -> Bool {
+class Constants{
+    static let shared = Constants()
+    let toolBar = UIToolbar()
+    func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
-    static func hasEmptyFields(fields: [UITextField?]) -> Bool {
+    func hasEmptyFields(fields: [UITextField?]) -> Bool {
         for field in fields {
             if let text = field?.text, text.isEmpty {
                 return true
@@ -20,5 +22,17 @@ struct Constants{
         }
         return false
     }
-    
+    func setUpToolBar(_ tbi: [UIBarButtonItem], _ tf: [UITextField?], _ tb: UIToolbar,_ target: AnyObject?){
+        tbi.forEach { $0.target = target }
+        tb.sizeToFit()
+        tb.items = tbi
+        tf.forEach { $0?.inputAccessoryView = tb }
+    }
+    func showAlert(alert:UIAlertController,title: String, message: String){
+        if !alert.hasActions{
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        }
+        alert.title = title
+        alert.message = message
+    }
 }
