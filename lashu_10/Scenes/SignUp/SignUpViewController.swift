@@ -38,7 +38,6 @@ class SignUpViewController: UIViewController {
         ]
         Constants.shared.setUpToolBar([nextButton, doneButton], textFields, toolBar, self)
         setUpDummyFields()
-        setUpAlert()
     }
     
     //MARK: Actions
@@ -91,9 +90,6 @@ class SignUpViewController: UIViewController {
         }
     }
     //MARK: Private methods
-    private func setUpAlert(){
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    }
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -102,11 +98,6 @@ class SignUpViewController: UIViewController {
     func registerUser(_ user: User){
         UserDataSource.shared.addUserToDataSource(user)
         print("registered user \(user)")
-    }
-    func showAlert(title: String, message: String) {
-        alert.title = title
-        alert.message = message
-        present(alert, animated: true, completion: nil)
     }
     func moveToSignInStoryBoard(){
         let sb = UIStoryboard(name: "SignIn", bundle: nil)

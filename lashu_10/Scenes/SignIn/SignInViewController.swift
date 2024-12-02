@@ -13,11 +13,15 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     //MARK: Properties
     let alert = UIAlertController()
+    let toolBar = Constants.shared.toolBar
+    let nextButton = UIBarButtonItem(title: "next", style: .plain, target: nil, action: #selector(nextButtonTapped))
+    let doneButton = UIBarButtonItem(title: "done", style: .plain, target: nil, action: #selector(doneButtonTapped))
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpAlert()
         // Do any additional setup after loading the view.
+        Constants.shared.setUpToolBar([nextButton,doneButton], [emailTextField, passwordTextField], toolBar, self)
     }
     //MARK: Actions
     @IBAction func didTapLogIn(_ sender: UIButton) {
@@ -63,5 +67,18 @@ class SignInViewController: UIViewController {
     func doesUserExist() -> Bool {
         UserDataSource.shared.users.contains(where: { $0.email == emailTextField?.text ?? "" })
     }
-    
+    //MARK: objc funcs
+    @objc func doneButtonTapped(){
+        view.endEditing(true)
+    }
+    @objc func nextButtonTapped(){
+        if emailTextField?.isFirstResponder == true {
+            passwordTextField?.becomeFirstResponder()
+        } else{
+            if passwordTextField?.isFirstResponder == true {
+                emailTextField?.becomeFirstResponder()
+            }
+        }
+        
+    }
 }
