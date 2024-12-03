@@ -24,22 +24,27 @@ class SignInViewController: UIViewController {
     }
     //MARK: Actions
     @IBAction func didTapLogIn(_ sender: UIButton) {
-        if !isEmailValid(){
-            C.shared.showAlert(vc: self, alert: alert,title: "enter valid email", message: "This is not an email")
+        guard let email = emailTextField?.text,
+              let password = passwordTextField?.text else {
+            C.shared.showAlert(vc: self, alert: alert, title: "Empty Fields", message: "Please fill in both email and password.")
             return
         }
-        if C.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
-            C.shared.showAlert(vc: self, alert: alert, title: "empty fields", message: "fill the empty fields to log in")
+        
+        if !C.shared.isValidEmail(email) {
+            C.shared.showAlert(vc: self, alert: alert, title: "Invalid Email", message: "Please enter a valid email address.")
             return
         }
         
         let (canLogIn, user) = canLogIn()
-        if canLogIn{
+        if canLogIn, let user = user {
             moveToUserProfile(user: user)
-        }else{
-            C.shared.showAlert(vc: self, alert: alert, title: "wrong password", message: "Your user exists but, you entered wrong password.")
+        } else if UserDataSource.shared.users.contains(where: { $0.email == email }) {
+            C.shared.showAlert(vc: self, alert: alert, title: "Wrong Password", message: "Your email exists, but the password is incorrect.")
+        } else {
+            C.shared.showAlert(vc: self, alert: alert, title: "User Not Found", message: "No user found with the provided email.")
         }
     }
+
     @IBAction func didEndEditingEmail(_ sender: UITextField) {
         if !isEmailValid() {
             emailTextField.layer.borderWidth = 4
@@ -69,26 +74,22 @@ class SignInViewController: UIViewController {
         
     }
     func isEmailValid() -> Bool {
-        C.shared.isValidEmail(emailTextField?.text ?? "")
+        guard let email = emailTextField?.text else { return false }
+        if !C.shared.isValidEmail(email) { return false }
+        return UserDataSource.shared.users.contains { $0.email == email }
     }
     func doesUserExist() -> (Bool, User?) {
-        guard let email = emailTextField?.text else {
-                return (false, nil)
-            }
-            if let user = UserDataSource.shared.users.first(where: { $0.email == email }) {
-                return (true, user)
-            }
-            return (false, nil)
+        guard let email = emailTextField?.text else { return (false, nil) }
+        if let user = UserDataSource.shared.users.first(where: { $0.email == email }) {
+            return (true, user)
+        }
+        return (false, nil)
     }
-    func canLogIn() -> (Bool, User?){
-        let (isValid, user) = doesUserExist()
-        if isValid {
-            guard let password = passwordTextField?.text else {
-                return (false, nil)
-            }
-            if user?.password == password {
-               return (true, user)
-            }
+    func canLogIn() -> (Bool, User?) {
+        guard let email = emailTextField?.text,
+              let password = passwordTextField?.text else { return (false, nil) }
+        if let user = UserDataSource.shared.users.first(where: { $0.email == email }) {
+            return (user.password == password, user)
         }
         return (false, nil)
     }
