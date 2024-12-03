@@ -13,27 +13,31 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     //MARK: Properties
     let alert = UIAlertController()
-    let toolBar = Constants.shared.toolBar
+    let toolBar = C.shared.toolBar
     let nextButton = UIBarButtonItem(title: "next", style: .plain, target: nil, action: #selector(nextButtonTapped))
     let doneButton = UIBarButtonItem(title: "done", style: .plain, target: nil, action: #selector(doneButtonTapped))
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        Constants.shared.setUpToolBar([nextButton,doneButton], [emailTextField, passwordTextField], toolBar, self)
+        C.shared.setUpToolBar([nextButton,doneButton], [emailTextField, passwordTextField], toolBar, self)
     }
     //MARK: Actions
     @IBAction func didTapLogIn(_ sender: UIButton) {
         if !isEmailValid(){
-            Constants.shared.showAlert(vc: self, alert: alert,title: "enter valid email", message: "This is not an email")
+            C.shared.showAlert(vc: self, alert: alert,title: "enter valid email", message: "This is not an email")
             return
         }
-        if Constants.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
-            Constants.shared.showAlert(vc: self, alert: alert, title: "empty fields", message: "fill the empty fields to log in")
+        if C.shared.hasEmptyFields(fields: [emailTextField, passwordTextField]) {
+            C.shared.showAlert(vc: self, alert: alert, title: "empty fields", message: "fill the empty fields to log in")
             return
         }
-        if canLogIn() {
-            
+        
+        let (canLogIn, user) = canLogIn()
+        if canLogIn{
+            moveToUserProfile(user: user)
+        }else{
+            C.shared.showAlert(vc: self, alert: alert, title: "wrong password", message: "Your user exists but, you entered wrong password.")
         }
     }
     @IBAction func didEndEditingEmail(_ sender: UITextField) {
@@ -56,8 +60,16 @@ class SignInViewController: UIViewController {
      }
      */
     //MARK: Methods
+    func moveToUserProfile(user: User?){
+        let sb = UIStoryboard(name: "UserLoggedIn", bundle: nil)
+        if let vc = sb.instantiateViewController(withIdentifier: "UserProfile") as? UserLoggedInViewController{
+            vc.user = user
+            navigationController?.pushViewController(vc , animated: true)
+        }
+        
+    }
     func isEmailValid() -> Bool {
-        Constants.shared.isValidEmail(emailTextField?.text ?? "")
+        C.shared.isValidEmail(emailTextField?.text ?? "")
     }
     func doesUserExist() -> (Bool, User?) {
         guard let email = emailTextField?.text else {
@@ -68,17 +80,17 @@ class SignInViewController: UIViewController {
             }
             return (false, nil)
     }
-    func canLogIn() -> Bool{
+    func canLogIn() -> (Bool, User?){
         let (isValid, user) = doesUserExist()
         if isValid {
             guard let password = passwordTextField?.text else {
-                return false
+                return (false, nil)
             }
             if user?.password == password {
-               return true
+               return (true, user)
             }
         }
-        return false
+        return (false, nil)
     }
     //MARK: objc funcs
     @objc func doneButtonTapped(){

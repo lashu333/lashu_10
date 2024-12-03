@@ -19,7 +19,7 @@ struct User{
     var workPlace: String?
     var password: String
     
-    enum MaritalStatus{
+    enum MaritalStatus: String{
         case single
         case married
         case divorced

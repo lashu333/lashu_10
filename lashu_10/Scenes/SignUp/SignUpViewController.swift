@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     //MARK: Properties
     //let user: User?
-    let toolBar = Constants.shared.toolBar
+    let toolBar = C.shared.toolBar
     let alert = UIAlertController()
     let nextButton = UIBarButtonItem(title: "next", style: .plain, target: nil, action: #selector(nextButtonTapped))
     let doneButton = UIBarButtonItem(title: "done", style: .plain, target: nil, action: #selector(doneButtonTapped))
@@ -36,7 +36,7 @@ class SignUpViewController: UIViewController {
             addressTextField, maritalStatusTextField, workPlaceTextField,
             passwordTextField
         ]
-        Constants.shared.setUpToolBar([nextButton, doneButton], textFields, toolBar, self)
+        C.shared.setUpToolBar([nextButton, doneButton], textFields, toolBar, self)
         setUpDummyFields()
     }
     
@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController {
               let workPlace = workPlaceTextField?.text, !workPlace.isEmpty,
               let password = passwordTextField?.text else {
             
-            Constants.shared.showAlert(vc: self, alert: alert, title: "empty fields!", message: "Please fill all fields correctly")
+            C.shared.showAlert(vc: self, alert: alert, title: "empty fields!", message: "Please fill all fields correctly")
             return
         }
         let newUser = User(
@@ -71,7 +71,7 @@ class SignUpViewController: UIViewController {
         )
         for u in UserDataSource.shared.users {
             if u.email == newUser.email {
-                Constants.shared.showAlert(vc: self, alert: alert,title:"user is already registered ", message: "you can log in")
+                C.shared.showAlert(vc: self, alert: alert,title:"user is already registered ", message: "you can log in")
                 couldFoundUserInSource = true
                 break
             }

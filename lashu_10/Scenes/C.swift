@@ -6,8 +6,9 @@
 //
 
 import UIKit
-class Constants{
-    static let shared = Constants()
+//C as in Constant
+class C{
+    static let shared = C()
     let toolBar = UIToolbar()
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
