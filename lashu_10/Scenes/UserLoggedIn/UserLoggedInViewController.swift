@@ -9,6 +9,7 @@ import UIKit
 
 class UserLoggedInViewController: UIViewController {
 // MARK: Outlets
+    @IBOutlet weak var bigNameLabel: UILabel!
     @IBOutlet weak var imageView1: UIImageView!
     @IBOutlet weak var label1: UILabel!
     @IBOutlet weak var imageView2: UIImageView!
@@ -50,6 +51,7 @@ class UserLoggedInViewController: UIViewController {
     */
 // MARK: Methods
     func setUpUserProfile() {
+        bigNameLabel.text = "\(user?.firstName ?? "N/A") \(user?.lastName ?? "N/A")"
         configureField(label: label1, imageView: imageView1, text: user?.firstName, symbol: "person")
         configureField(label: label2, imageView: imageView2, text: user?.lastName, symbol: "person.fill")
         configureField(label: label3, imageView: imageView3, text: user?.email, symbol: "envelope.fill")
